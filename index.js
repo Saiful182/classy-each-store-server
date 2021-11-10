@@ -17,6 +17,7 @@ async function run() {
         const database = client.db('Classy_watch_store');
         const productsCollection = database.collection('products');
         const cartsCollection = database.collection('carts');
+        const reviewsCollection = database.collection('reviews');
         app.post('/products', async (req, res) => {
             const product = req.body;
             console.log('hitted', product)
@@ -62,6 +63,17 @@ async function run() {
             console.log('hitted');
             res.json(result);
         })
+        app.post('/reviews', async (req, res) => {
+            const review = req.body;
+            console.log(review);
+            const result = await reviewsCollection.insertOne(review);
+            res.json(result);
+        });
+        app.get('/reviews', async (req, res) => {
+            const cursor = reviewsCollection.find({})
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+        });
     }
     finally {
         // await client.close();
