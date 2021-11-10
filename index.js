@@ -45,8 +45,22 @@ async function run() {
         app.get('/carts', async (req, res) => {
             const cursor = cartsCollection.find({})
             const carts = await cursor.toArray();
-            console.log('products working')
+
             res.send(carts);
+        })
+        app.get('/carts/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const cart = await cartsCollection.findOne(query);
+            res.json(cart);
+        })
+
+        app.delete('/carts/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await cartsCollection.deleteOne(query);
+            console.log('hitted');
+            res.json(result);
         })
     }
     finally {
