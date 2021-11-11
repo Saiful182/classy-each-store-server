@@ -18,6 +18,7 @@ async function run() {
         const productsCollection = database.collection('products');
         const cartsCollection = database.collection('carts');
         const reviewsCollection = database.collection('reviews');
+        const usersCollection = database.collection('users');
         app.post('/products', async (req, res) => {
             const product = req.body;
             console.log('hitted', product)
@@ -73,6 +74,17 @@ async function run() {
             const cursor = reviewsCollection.find({})
             const reviews = await cursor.toArray();
             res.send(reviews);
+        });
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            console.log(user);
+            const result = await usersCollection.insertOne(user);
+            res.json(result);
+        });
+        app.get('/users', async (req, res) => {
+            const cursor = usersCollection.find({})
+            const users = await cursor.toArray();
+            res.send(users);
         });
     }
     finally {
