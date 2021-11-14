@@ -28,14 +28,19 @@ async function run() {
         app.get('/products', async (req, res) => {
             const cursor = productsCollection.find({})
             const products = await cursor.toArray();
-            console.log('products working')
             res.send(products);
-
         })
         app.get('/products/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const product = await productsCollection.findOne(query);
+            res.json(product);
+        })
+        app.delete('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const product = await productsCollection.deleteOne(query);
+            console.log('deleted product');
             res.json(product);
         })
         app.post('/carts', async (req, res) => {
@@ -63,6 +68,22 @@ async function run() {
             const result = await cartsCollection.deleteOne(query);
             console.log('hitted');
             res.json(result);
+        })
+        app.put('/carts/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedCart = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    appoval: updatedCart.appoval = "Approved"
+                }
+            };
+            console.log(req.body);
+            const result = await cartsCollection.updateOne(filter, updateDoc, options);
+            console.log('Inserting', id);
+            res.json(result);
+
         })
         app.post('/reviews', async (req, res) => {
             const review = req.body;
