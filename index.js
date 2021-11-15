@@ -19,6 +19,7 @@ async function run() {
         const cartsCollection = database.collection('carts');
         const reviewsCollection = database.collection('reviews');
         const usersCollection = database.collection('users');
+        const brandsCollection = database.collection('brands');
         app.post('/products', async (req, res) => {
             const product = req.body;
             console.log('hitted', product)
@@ -55,6 +56,7 @@ async function run() {
 
             res.send(carts);
         })
+
         app.get('/carts/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
@@ -137,6 +139,11 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updateDoc, options);
             res.json(result);
         });
+        app.get('/brands', async (req, res) => {
+            const cursor = brandsCollection.find({})
+            const brands = await cursor.toArray();
+            res.send(brands);
+        })
 
 
 
